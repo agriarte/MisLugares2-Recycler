@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://G:\MisLugares2-master\MisLugares2.iml" filepath="G:\MisLugares2-master\MisLugares2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MisLugares2-Recycler.iml" filepath="$PROJECT_DIR$/MisLugares2-Recycler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+    </modules>
+  </component>
+</project>

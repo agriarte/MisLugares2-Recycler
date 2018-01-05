@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">MisLugares</string>
+    <string name="action_settings">Settings</string>
+    <string name="mostrar_lugares">Mostrar Lugares</string>
+    <string name="preferencias">Preferencias</string>
+    <string name="acerca_de">Acerca de</string>
+    <string name="salir">Salir</string>
+    <string name="tipo">Tipo:</string>
+    <string name="direccion">Dirección:</string>
+    <string name="nombre">Nombre:</string>
+    <string name="algo_que_identifique_el_lugar">algo que identifique el lugar</string>
+    <string name="direcci_n_del_lugar">dirección del lugar</string>
+    <string name="telefono">Telefono:</string>
+    <string name="nombres_del_lugar">Nombres del lugar</string>
+    <string name="logo_del_tipo">logo del tipo</string>
+    <string name="tipo_del_lugar">tipo del lugar</string>
+    <string name="fotograf_a">fotografía</string>
+    <string name="logo_galer_a">logo galería</string>
+    <string name="logo_c_mara">logo cámara</string>
+</resources>
