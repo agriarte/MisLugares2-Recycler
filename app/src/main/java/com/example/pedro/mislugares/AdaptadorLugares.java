@@ -33,12 +33,14 @@ public class AdaptadorLugares extends
         public TextView nombre, direccion;
         public ImageView foto;
         public RatingBar valoracion;
+        public TextView distancia;
         public ViewHolder(View itemView) {
             super(itemView);
             nombre = (TextView) itemView.findViewById(R.id.nombre);
             direccion = (TextView) itemView.findViewById(R.id.direccion);
             foto = (ImageView) itemView.findViewById(R.id.foto);
             valoracion = (RatingBar) itemView.findViewById(R.id.valoracion);
+            distancia = (TextView) itemView.findViewById(R.id.distancia);
         }
     }
     // Creamos el ViewHolder con las vista de un elemento sin personalizar
@@ -77,6 +79,15 @@ public class AdaptadorLugares extends
         holder.foto.setImageResource(id);
         holder.foto.setScaleType(ImageView.ScaleType.FIT_END);
         holder.valoracion.setRating(lugar.getValoracion());
+
+        if (Lugares.posicionActual != null && lugar.getPosicion() != null) {
+            int d=(int) Lugares.posicionActual.distancia(lugar.getPosicion());
+            if (d < 2000) {
+                holder.distancia.setText(d + " m");
+            } else {
+                holder.distancia.setText(d / 1000 + " Km");
+            }
+        }
     }
     // Indicamos el número de elementos de la lista
     @Override public int getItemCount() {

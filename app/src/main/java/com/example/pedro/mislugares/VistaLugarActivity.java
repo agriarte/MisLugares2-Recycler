@@ -1,17 +1,23 @@
 package com.example.pedro.mislugares;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +52,9 @@ public class VistaLugarActivity extends AppCompatActivity {
     final static int RESULTADO_EDITAR = 1;
     final static int RESULTADO_GALERIA = 2;
     final static int RESULTADO_FOTO = 3;
+
+    //variable para permisos en Marshmallow
+    private static final int SOLICITUD_PERMISO_READ_EXTERNAL_STORAGE_GALERIA = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,14 +229,77 @@ public class VistaLugarActivity extends AppCompatActivity {
                 Uri.parse(lugar.getUrl())));
     }
 
-
+    //crea una intención indicando que queremos seleccionar contenido del content provider
+    //Mediastore (normalmente galería de fotos)
     public void galeria(View view) {
-        //crea una intención indicando que queremos seleccionar contenido del content provider
-        //Mediastore (normalmente galería de fotos)
+        //Verificar que tenemos permiso WRITE EXTERNAL STORAGE
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED) {
+            //tenemos permiso, llamada a galeriaf
+            Log.d("***", "galeria primer if ContextCompat.checkSelfPermission");
+            galeria2();
+
+        } else {
+            //no tenemos, se solicita
+            Log.d("***", "galeria primer if else");
+            solicitarPermiso(Manifest.permission.READ_EXTERNAL_STORAGE, "Se necesita permiso" +
+                            " WRITE External Storage para acceso a cámara y galería",
+                    SOLICITUD_PERMISO_READ_EXTERNAL_STORAGE_GALERIA, this);
+        }
+    }
+
+    private void galeria2() {
+        // solo si tengo permisos de external WRITE storage ...
+        Log.d("***", "galeria2");
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RESULTADO_GALERIA);
     }
 
+    private static void solicitarPermiso(final String nombrePermiso, String justificacion,
+                                         final int requestCode, final Activity actividad) {
+
+        // se debe explicar el motivo de solicitar el permiso?
+        if (ActivityCompat.shouldShowRequestPermissionRationale(actividad, nombrePermiso)) {
+            Log.d("***", "solicitar permiso if");
+            //SI, se informa con AlertDialog
+            new AlertDialog.Builder(actividad)
+                    .setTitle("Solicitud de Permiso")
+                    .setMessage(justificacion)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //requestPermission abre un cuadro de dialogo estandar solicitando permiso
+                            ActivityCompat.requestPermissions(actividad, new String[]{nombrePermiso}, requestCode);
+                        }
+                    })
+                    .show();
+        } else {
+            //NO, se solicita directamente
+            Log.d("***", "solicitar permiso else");
+            ActivityCompat.requestPermissions(actividad, new String[]{nombrePermiso}, requestCode);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permiso, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permiso, grantResults);
+
+        switch (requestCode) {
+            //Si estamos requiriendo permiso para acceder a la galería
+            case SOLICITUD_PERMISO_READ_EXTERNAL_STORAGE_GALERIA: {
+
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d("***", "onRequestPermissionResult TENEMOS PERMISO -> galeria2");
+                    galeria2();
+                } else {
+                    Toast.makeText(this, "Sin el permiso WRITE, no puedo realizar la " +
+                            "acción", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 
     public void tomarFoto(View view) {
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -238,6 +310,7 @@ public class VistaLugarActivity extends AppCompatActivity {
         startActivityForResult(intent, RESULTADO_FOTO);
 
     }
+
 
     public void eliminarFoto(View view) {
         lugar.setFoto(null);

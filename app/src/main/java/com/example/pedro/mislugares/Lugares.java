@@ -5,6 +5,9 @@ package com.example.pedro.mislugares;
  */
 
 public interface Lugares {
+    final static String TAG = "MisLugares";
+    GeoPunto posicionActual = new GeoPunto(0,0);
+
     Lugar elemento(int id); //Devuelve el elemento dado su id
     void anyade(Lugar lugar); //Añade el elemento indicado
     int nuevo(); //Añade un elemento en blanco y devuelve su id
