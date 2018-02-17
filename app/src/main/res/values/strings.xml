@@ -17,4 +17,5 @@
     <string name="fotograf_a">fotografía</string>
     <string name="logo_galer_a">logo galería</string>
     <string name="logo_c_mara">logo cámara</string>
+    <string name="title_activity_mapa">Map</string>
 </resources>

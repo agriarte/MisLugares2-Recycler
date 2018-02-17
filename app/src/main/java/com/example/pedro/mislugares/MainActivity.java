@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     public static void solicitarPermiso(final String permiso, String justificacion, final int requesCode,
                                         final MainActivity mainActivity) {
+
         if (ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, permiso)) {
             new AlertDialog.Builder(mainActivity)
                     .setTitle("Solicitud de Permiso")
@@ -118,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         } else {
             ActivityCompat.requestPermissions(mainActivity, new String[]{permiso}, requesCode);
         }
+
+
+
     }
 
 
@@ -261,6 +265,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             lanzarVistaLugar(null);
             return true;
         }
+
+        if (id==R.id.menu_mapa) {
+            Intent intent = new Intent(this, mapaActivity.class);
+            startActivity(intent);
+        }
+
+
 
         return super.onOptionsItemSelected(item);
     }
