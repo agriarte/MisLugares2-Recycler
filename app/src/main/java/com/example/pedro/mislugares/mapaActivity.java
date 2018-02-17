@@ -1,6 +1,7 @@
 package com.example.pedro.mislugares;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,9 +15,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class mapaActivity extends FragmentActivity implements OnMapReadyCallback {
+public class mapaActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mapa;
 
@@ -24,6 +26,7 @@ public class mapaActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mapa);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -31,15 +34,7 @@ public class mapaActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapa = googleMap;
@@ -50,13 +45,13 @@ public class mapaActivity extends FragmentActivity implements OnMapReadyCallback
             mapa.getUiSettings().setZoomControlsEnabled(true);
             mapa.getUiSettings().setCompassEnabled(true);
         }
-        if (MainActivity.lugares.tamanyo() > 0) {
-            GeoPunto p = MainActivity.lugares.elemento(0).getPosicion();
+        if (MainActivity.adaptador.getItemCount() > 0) {
+            GeoPunto p = MainActivity.adaptador.lugarPosicion(0).getPosicion();
             mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(p.getLatitud(), p.getLongitud()), 12));
         }
-        for (int n=0; n<MainActivity.lugares.tamanyo(); n++) {
-            Lugar lugar = MainActivity.lugares.elemento(n);
+        for (int n=0; n<MainActivity.adaptador.getItemCount(); n++) {
+            Lugar lugar = MainActivity.adaptador.lugarPosicion(n);
             GeoPunto p = lugar.getPosicion();
             if (p != null && p.getLatitud() != 0) {
                 BitmapDrawable iconoDrawable = (BitmapDrawable) getResources()
@@ -70,5 +65,26 @@ public class mapaActivity extends FragmentActivity implements OnMapReadyCallback
                         .icon(BitmapDescriptorFactory.fromBitmap(icono)));
             }
         }
+
+
+
+        mapa.setOnInfoWindowClickListener(this);
+    }
+
+    @Override public void onInfoWindowClick(Marker marker) {
+        for (int id=0; id<MainActivity.adaptador.getItemCount(); id++){
+            if (MainActivity.adaptador.lugarPosicion(id).getNombre()
+                    .equals(marker.getTitle())){
+                Intent intent = new Intent(this, VistaLugarActivity.class);
+                intent.putExtra("id", (long)id);
+                startActivity(intent);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }

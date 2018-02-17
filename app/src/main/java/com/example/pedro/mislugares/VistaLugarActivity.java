@@ -166,7 +166,7 @@ public class VistaLugarActivity extends AppCompatActivity {
 
     private void actualizarVistas() {
 
-        lugar = MainActivity.lugares.elemento((int) id);
+        lugar = MainActivity.adaptador.lugarPosicion((int) id);
 
         TextView nombre = (TextView) findViewById(R.id.nombre);
         nombre.setText(lugar.getNombre());

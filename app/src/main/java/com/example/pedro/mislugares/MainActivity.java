@@ -29,14 +29,17 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
-    public static Lugares lugares = new LugaresVector();
+
     private RecyclerView recyclerView;
-    public AdaptadorLugares adaptador;
+
     private RecyclerView.LayoutManager layoutManager;
     private LocationManager manejador;
     private Location mejorLocalizacion;
     private final int SOLICITUD_PERMISO_LOCALIZACION = 10;
     private static final long DOS_MINUTOS = 2 * 60 * 1000;
+
+    public static LugaresBD lugares;
+    public static AdaptadorLugaresBD adaptador;
 
     //para actualizar el Recycler notifyDataSetChanged
     @Override
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        lugares = new LugaresBD(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        adaptador = new AdaptadorLugares(this, lugares);
+
+        adaptador = new AdaptadorLugaresBD(this, lugares,lugares.extraeCursor());
+
         recyclerView.setAdapter(adaptador);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

@@ -33,7 +33,7 @@ public class EdicionLugarActivity extends AppCompatActivity {
         //si pongo getLong no obtengo nada del extra y toma el valor -1
         id = extras.getInt("id", -1);
 
-        lugar = MainActivity.lugares.elemento((int) id);
+        lugar = MainActivity.adaptador.lugarPosicion((int) id);
 
 
         nombre = (EditText) findViewById(R.id.nombre);
